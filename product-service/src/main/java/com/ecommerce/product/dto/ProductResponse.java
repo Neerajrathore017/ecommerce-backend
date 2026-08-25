@@ -2,6 +2,8 @@ package com.ecommerce.product.dto;
 
 import java.math.BigDecimal;
 
+import com.ecommerce.product.entity.ProductStatus;
+
 public class ProductResponse {
     private Long id;
     private String name;
@@ -10,6 +12,7 @@ public class ProductResponse {
     private Integer quantity;
     private String category;
     private String imageUrl;
+    private ProductStatus status;
 
     public ProductResponse() {
     }
@@ -21,7 +24,8 @@ public class ProductResponse {
             BigDecimal price,
             Integer quantity,
             String category,
-            String imageUrl) {
+            String imageUrl,
+            ProductStatus status) {
 
         this.id = id;
         this.name = name;
@@ -30,6 +34,7 @@ public class ProductResponse {
         this.quantity = quantity;
         this.category = category;
         this.imageUrl = imageUrl;
+        this.status = status;
     }
 
     public Long getId() {
@@ -86,6 +91,14 @@ public class ProductResponse {
 
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
+    }
+
+    public ProductStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(ProductStatus status) {
+        this.status = status;
     }
 
 }

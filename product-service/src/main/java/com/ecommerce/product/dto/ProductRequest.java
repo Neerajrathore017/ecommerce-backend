@@ -2,6 +2,8 @@ package com.ecommerce.product.dto;
 
 import java.math.BigDecimal;
 
+import com.ecommerce.product.entity.ProductStatus;
+
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
@@ -25,6 +27,7 @@ public class ProductRequest {
     private String category;
 
     private String imageUrl;
+    private ProductStatus status;
 
     public ProductRequest() {
     }
@@ -75,6 +78,14 @@ public class ProductRequest {
 
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
+    }
+
+    public ProductStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(ProductStatus status) {
+        this.status = status;
     }
 
 }

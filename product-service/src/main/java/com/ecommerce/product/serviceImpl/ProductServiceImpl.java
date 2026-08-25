@@ -12,6 +12,7 @@ import com.ecommerce.product.dto.PageResponse;
 import com.ecommerce.product.dto.ProductRequest;
 import com.ecommerce.product.dto.ProductResponse;
 import com.ecommerce.product.entity.Product;
+import com.ecommerce.product.entity.ProductStatus;
 import com.ecommerce.product.exception.ProductNotFoundException;
 import com.ecommerce.product.repository.ProductRepository;
 import com.ecommerce.product.service.ProductService;
@@ -34,6 +35,12 @@ public class ProductServiceImpl implements ProductService {
         product.setQuantity(request.getQuantity());
         product.setCategory(request.getCategory());
         product.setImageUrl(request.getImageUrl());
+
+if (request.getQuantity() > 0) {
+    product.setStatus(ProductStatus.ACTIVE);
+} else {
+    product.setStatus(ProductStatus.OUT_OF_STOCK);
+}
 
         Product savedProduct = productRepository.save(product);
         return mapToResponse(savedProduct);
@@ -151,6 +158,8 @@ public class ProductServiceImpl implements ProductService {
                 product.getPrice(),
                 product.getQuantity(),
                 product.getCategory(),
-                product.getImageUrl());
+                product.getImageUrl(),
+                product.getStatus()
+            );
     }
 }
