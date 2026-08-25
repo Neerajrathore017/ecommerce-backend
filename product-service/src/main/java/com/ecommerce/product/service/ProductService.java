@@ -2,6 +2,7 @@ package com.ecommerce.product.service;
 
 import java.util.List;
 
+import com.ecommerce.product.dto.PageResponse;
 import com.ecommerce.product.dto.ProductRequest;
 import com.ecommerce.product.dto.ProductResponse;
 
@@ -13,4 +14,13 @@ public interface ProductService {
     ProductResponse getProductById(Long id);
     ProductResponse updateProduct(Long id, ProductRequest request);
     void deleteProduct(Long id);
+    
+    PageResponse<ProductResponse> getProducts(
+        String search,
+        String category,
+        int page,
+        int size,
+        String sortBy,
+        String direction
+);
 }

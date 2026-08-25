@@ -2,8 +2,13 @@ package com.ecommerce.product.serviceImpl;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import com.ecommerce.product.dto.PageResponse;
 import com.ecommerce.product.dto.ProductRequest;
 import com.ecommerce.product.dto.ProductResponse;
 import com.ecommerce.product.entity.Product;
@@ -72,6 +77,69 @@ public class ProductServiceImpl implements ProductService {
                         "Product not found with id: " + id));
 
         productRepository.delete(product);
+    }
+
+    @Override
+    public PageResponse<ProductResponse> getProducts(
+            String search,
+            String category,
+            int page,
+            int size,
+            String sortBy,
+            String direction) {
+
+        Sort sort = direction.equalsIgnoreCase("desc")
+                ? Sort.by(sortBy).descending()
+                : Sort.by(sortBy).ascending();
+
+        Pageable pageable = PageRequest.of(page, size, sort);
+
+        Page<Product> productPage;
+
+        boolean hasSearch = search != null && !search.trim().isEmpty();
+
+        boolean hasCategory = category != null && !category.trim().isEmpty();
+
+        if (hasSearch && hasCategory) {
+
+            productPage = productRepository
+                    .findByNameContainingIgnoreCaseAndCategoryIgnoreCase(
+                            search,
+                            category,
+                            pageable);
+
+        } else if (hasSearch) {
+
+            productPage = productRepository
+                    .findByNameContainingIgnoreCase(
+                            search,
+                            pageable);
+
+        } else if (hasCategory) {
+
+            productPage = productRepository
+                    .findByCategoryIgnoreCase(
+                            category,
+                            pageable);
+
+        } else {
+
+            productPage = productRepository.findAll(pageable);
+        }
+
+        List<ProductResponse> products = productPage.getContent()
+                .stream()
+                .map(this::mapToResponse)
+                .toList();
+
+        return new PageResponse<>(
+                products,
+                productPage.getNumber(),
+                productPage.getSize(),
+                productPage.getTotalElements(),
+                productPage.getTotalPages(),
+                productPage.isFirst(),
+                productPage.isLast());
     }
 
     private ProductResponse mapToResponse(Product product) {
