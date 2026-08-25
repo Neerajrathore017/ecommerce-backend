@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import com.ecommerce.product.dto.ProductRequest;
 import com.ecommerce.product.dto.ProductResponse;
 import com.ecommerce.product.entity.Product;
+import com.ecommerce.product.exception.ProductNotFoundException;
 import com.ecommerce.product.repository.ProductRepository;
 import com.ecommerce.product.service.ProductService;
 
@@ -40,14 +41,15 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public ProductResponse getProductById(Long id) {
-        Product product = productRepository.findById(id).orElseThrow(() -> new RuntimeException(
+        Product product = productRepository.findById(id).orElseThrow(() -> new ProductNotFoundException(
                 "Product not found with id: " + id));
         return mapToResponse(product);
     }
 
     @Override
     public ProductResponse updateProduct(Long id, ProductRequest request) {
-        Product existingProduct = productRepository.findById(id).orElse(null);
+        Product existingProduct = productRepository.findById(id).orElseThrow(() -> new ProductNotFoundException(
+                "Product not found with id: " + id));
         if (existingProduct != null) {
 
             existingProduct.setName(request.getName());
@@ -66,7 +68,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public void deleteProduct(Long id) {
         Product product = productRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException(
+                .orElseThrow(() -> new ProductNotFoundException(
                         "Product not found with id: " + id));
 
         productRepository.delete(product);
