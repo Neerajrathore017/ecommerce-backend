@@ -33,7 +33,6 @@ public SecurityConfig(
                     "/auth/register",
                     "/auth/login"
                 )
-
                 .permitAll()
                 .anyRequest().authenticated()
             )

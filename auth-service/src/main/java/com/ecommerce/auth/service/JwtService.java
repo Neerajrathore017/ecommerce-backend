@@ -23,11 +23,13 @@ public class JwtService {
             );
 
     public String generateToken(
+         Long userId,
             String email,
             String role) {
 
         return Jwts.builder()
                 .subject(email)
+                .claim("userId", userId)
                 .claim("role", role)
                 .issuedAt(new Date())
                 .expiration(
@@ -36,7 +38,8 @@ public class JwtService {
                                         + EXPIRATION_TIME
                         )
                 )
-                .signWith(key)
+                // .signWith(key)
+                .signWith(key, Jwts.SIG.HS256)
                 .compact();
     }
 

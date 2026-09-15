@@ -80,6 +80,7 @@ public class ProductController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteProduct(
             @PathVariable Long id) {
+                System.out.println("debug "+id);
 
         productService.deleteProduct(id);
 
