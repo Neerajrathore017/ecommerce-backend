@@ -89,10 +89,11 @@ public class SecurityConfig {
 
                         .pathMatchers(
                                 HttpMethod.DELETE,
-                                "/products",
+                                "/products",                    
                                 "/products/**"
                         ).hasRole("ADMIN")
                         .pathMatchers("/cart/**").authenticated()
+                        .pathMatchers("/orders/**").authenticated()
 
                         .anyExchange()
                         .authenticated()
