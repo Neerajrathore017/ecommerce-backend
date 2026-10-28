@@ -94,6 +94,7 @@ public class SecurityConfig {
                         ).hasRole("ADMIN")
                         .pathMatchers("/cart/**").authenticated()
                         .pathMatchers("/orders/**").authenticated()
+                        .pathMatchers(HttpMethod.OPTIONS, "/**").permitAll()
 
                         .anyExchange()
                         .authenticated()
