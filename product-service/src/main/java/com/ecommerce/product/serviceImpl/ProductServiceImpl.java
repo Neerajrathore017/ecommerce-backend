@@ -2,12 +2,14 @@ package com.ecommerce.product.serviceImpl;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import com.ecommerce.product.annotation.LogExecutionTime;
 import com.ecommerce.product.dto.PageResponse;
 import com.ecommerce.product.dto.ProductRequest;
 import com.ecommerce.product.dto.ProductResponse;
@@ -16,14 +18,18 @@ import com.ecommerce.product.entity.ProductStatus;
 import com.ecommerce.product.exception.ProductNotFoundException;
 import com.ecommerce.product.repository.ProductRepository;
 import com.ecommerce.product.service.ProductService;
+import com.ecommerce.product.service.TestInterface;
 
 @Service
 public class ProductServiceImpl implements ProductService {
     // Implement the methods defined in the ProductService interface
     private final ProductRepository productRepository;
+    private final TestInterface testInterface;
 
-    public ProductServiceImpl(ProductRepository productRepository) {
+    @Autowired
+    public ProductServiceImpl(ProductRepository productRepository, TestInterface testInterface) {
         this.productRepository = productRepository;
+        this.testInterface = testInterface;
     }
 
     @Override
@@ -32,22 +38,25 @@ public class ProductServiceImpl implements ProductService {
         product.setName(request.getName());
         product.setDescription(request.getDescription());
         product.setPrice(request.getPrice());
-        product.setQuantity(request.getQuantity());
+        // product.setQuantity(request.getQuantity());// set quanitty in inventory db also
         product.setCategory(request.getCategory());
         product.setImageUrl(request.getImageUrl());
+        product.setStatus(ProductStatus.ACTIVE);
 
-if (request.getQuantity() > 0) {
-    product.setStatus(ProductStatus.ACTIVE);
-} else {
-    product.setStatus(ProductStatus.OUT_OF_STOCK);
-}
+        // if (request.getQuantity() > 0) {
+        //     product.setStatus(ProductStatus.ACTIVE);
+        // } else {
+        //     product.setStatus(ProductStatus.OUT_OF_STOCK);
+        // }
 
         Product savedProduct = productRepository.save(product);
         return mapToResponse(savedProduct);
     }
 
+    @LogExecutionTime(name = "Service Impl")
     @Override
     public List<ProductResponse> getAllProducts() {
+        System.out.println("Testing is  there ");
         return productRepository.findAll().stream().map(this::mapToResponse).toList();
     }
 
@@ -67,7 +76,7 @@ if (request.getQuantity() > 0) {
             existingProduct.setName(request.getName());
             existingProduct.setDescription(request.getDescription());
             existingProduct.setPrice(request.getPrice());
-            existingProduct.setQuantity(request.getQuantity());
+            // existingProduct.setQuantity(request.getQuantity());
             existingProduct.setCategory(request.getCategory());
             existingProduct.setImageUrl(request.getImageUrl());
 
@@ -156,10 +165,9 @@ if (request.getQuantity() > 0) {
                 product.getName(),
                 product.getDescription(),
                 product.getPrice(),
-                product.getQuantity(),
+                // product.getQuantity(),
                 product.getCategory(),
                 product.getImageUrl(),
-                product.getStatus()
-            );
+                product.getStatus() );
     }
 }

@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.ecommerce.cart_service.dto.CartItemResponse;
 import com.ecommerce.cart_service.dto.CartResponse;
+import com.ecommerce.cart_service.dto.ProductResponse;
 import com.ecommerce.cart_service.entity.Cart;
 import com.ecommerce.cart_service.entity.CartItem;
 import com.ecommerce.cart_service.repository.CartItemRepository;
@@ -164,10 +165,23 @@ public class CartServiceImpl implements CartService {
                 List<CartItemResponse> items = cartItemRepository
                                 .findByCartId(cart.getId())
                                 .stream()
-                                .map(item -> new CartItemResponse(
-                                                item.getId(),
-                                                item.getProductId(),
-                                                item.getQuantity()))
+                                .map(item -> {
+                ProductResponse product =
+                        productClient.getProduct(item.getProductId());
+
+                return new CartItemResponse(
+                        item.getId(),
+                        product.id(),
+                        product.name(),
+                        product.description(),
+                        product.price(),
+                        product.quantity(),
+                        product.category(),
+                        product.imageUrl(),
+                        product.status(),
+                        item.getQuantity()
+                );
+            })
                                 .toList();
 
                 return new CartResponse(

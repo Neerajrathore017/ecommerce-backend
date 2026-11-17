@@ -1,4 +1,5 @@
 package com.ecommerce.payment.controller;
+import com.ecommerce.payment.dto.PaymentRequest;
 import com.ecommerce.payment.entity.Payment;
 import com.ecommerce.payment.service.PaymentService;
 import org.springframework.web.bind.annotation.*;
@@ -14,8 +15,10 @@ public class PaymentController {
     }
 
     @PostMapping
-    public Payment initiatePayment(@RequestBody Payment payment) {
-        return paymentService.initiatePayment(payment);
+    public Payment initiatePayment(@RequestBody PaymentRequest payment,  @RequestHeader("Authorization") String authorization) {
+        return paymentService.initiatePayment(payment
+            // ,authorization
+        );
     }
 
     @GetMapping("/{id}")

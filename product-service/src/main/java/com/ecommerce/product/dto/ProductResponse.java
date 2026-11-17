@@ -9,10 +9,11 @@ public class ProductResponse {
     private String name;
     private String description;
     private BigDecimal price;
-    private Integer quantity;
+    // private Integer quantity;
     private String category;
     private String imageUrl;
     private ProductStatus status;
+    // private Integer availableQuantity;
 
     public ProductResponse() {
     }
@@ -22,19 +23,22 @@ public class ProductResponse {
             String name,
             String description,
             BigDecimal price,
-            Integer quantity,
+            // Integer quantity,
             String category,
             String imageUrl,
-            ProductStatus status) {
+            ProductStatus status
+            // Integer availableQuantity
+        ) {
 
         this.id = id;
         this.name = name;
         this.description = description;
         this.price = price;
-        this.quantity = quantity;
+        // this.quantity = quantity;
         this.category = category;
         this.imageUrl = imageUrl;
         this.status = status;
+        // this.availableQuantity=availableQuantity;
     }
 
     public Long getId() {
@@ -69,13 +73,13 @@ public class ProductResponse {
         this.price = price;
     }
 
-    public Integer getQuantity() {
-        return quantity;
-    }
+    // public Integer getQuantity() {
+    //     return quantity;
+    // }
 
-    public void setQuantity(Integer quantity) {
-        this.quantity = quantity;
-    }
+    // public void setQuantity(Integer quantity) {
+    //     this.quantity = quantity;
+    // }
 
     public String getCategory() {
         return category;
@@ -100,5 +104,13 @@ public class ProductResponse {
     public void setStatus(ProductStatus status) {
         this.status = status;
     }
+
+    // public Integer getAvailableQuantity() {
+    //     return availableQuantity;
+    // }
+
+    // public void setAvailableQuantity(Integer availableQuantity) {
+    //     this.availableQuantity = availableQuantity;
+    // }
 
 }

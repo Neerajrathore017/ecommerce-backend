@@ -18,13 +18,20 @@ import org.springframework.security.oauth2.server.resource.authentication.Reacti
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
 import org.springframework.security.web.server.SecurityWebFilterChain;
-
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.reactive.CorsConfigurationSource;
+import org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource;
 @Configuration
 @EnableWebFluxSecurity
 public class SecurityConfig {
 
+//     private final CorsConfigurationSource corsConfigurationSource;
     @Value("${jwt.secret}")
     private String secret;
+
+//     SecurityConfig(CorsConfigurationSource corsConfigurationSource) {
+//         this.corsConfigurationSource = corsConfigurationSource;
+//     }
 
     @Bean
     public ReactiveJwtDecoder jwtDecoder() {
@@ -38,6 +45,29 @@ public class SecurityConfig {
                 .withSecretKey(key)
                 .build();
     }
+    @Bean
+public CorsConfigurationSource corsConfigurationSource() {
+
+    CorsConfiguration config = new CorsConfiguration();
+
+    config.setAllowedOrigins(List.of(
+            "http://localhost:3000"
+    ));
+
+    config.setAllowedMethods(List.of(
+            "GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"
+    ));
+
+    config.setAllowedHeaders(List.of("*"));
+    config.setAllowCredentials(true);
+
+    UrlBasedCorsConfigurationSource source =
+            new UrlBasedCorsConfigurationSource();
+
+    source.registerCorsConfiguration("/**", config);
+
+    return source;
+}
 
     @Bean
     public SecurityWebFilterChain securityWebFilterChain(
@@ -61,8 +91,14 @@ public class SecurityConfig {
 
         return http
                 .csrf(ServerHttpSecurity.CsrfSpec::disable)
+               .cors(cors ->
+        cors.configurationSource(corsConfigurationSource())
+)
+
 
                 .authorizeExchange(exchange -> exchange
+                         .pathMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+
 
                         .pathMatchers(
                                 "/auth/register",
@@ -94,6 +130,7 @@ public class SecurityConfig {
                         ).hasRole("ADMIN")
                         .pathMatchers("/cart/**").authenticated()
                         .pathMatchers("/orders/**").authenticated()
+                        .pathMatchers("/inventory/**").authenticated()
                         .pathMatchers(HttpMethod.OPTIONS, "/**").permitAll()
 
                         .anyExchange()

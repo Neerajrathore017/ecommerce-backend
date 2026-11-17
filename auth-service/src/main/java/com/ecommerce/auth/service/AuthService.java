@@ -5,7 +5,10 @@ import com.ecommerce.auth.dto.LoginRequest;
 import com.ecommerce.auth.dto.RegisterRequest;
 import com.ecommerce.auth.entity.Role;
 import com.ecommerce.auth.entity.User;
+import com.ecommerce.auth.exception.CustomException;
 import com.ecommerce.auth.repository.UserRepository;
+
+import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -33,7 +36,11 @@ public class AuthService {
         user.setPassword(
                 passwordEncoder.encode(request.getPassword())
         );
-
+//-------------------------------{
+//     "name": "Admin",
+//     "email": "admin@gmail.com",
+//     "password": "Admin@123"
+// }----------------------------
         // Every normal registration is a USER
         user.setRole(Role.ROLE_USER);
 
@@ -59,7 +66,7 @@ public class AuthService {
     User user = userRepository
             .findByEmail(request.getEmail())
             .orElseThrow(() ->
-                    new RuntimeException(
+                    new CustomException(HttpStatus.NOT_FOUND,
                             "Invalid email or password"
                     ));
 
@@ -67,7 +74,8 @@ public class AuthService {
             request.getPassword(),
             user.getPassword())) {
 
-        throw new RuntimeException(
+        throw new CustomException(
+                HttpStatus.UNAUTHORIZED,
                 "Invalid email or password"
         );
     }

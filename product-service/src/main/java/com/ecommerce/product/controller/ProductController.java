@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ecommerce.product.annotation.LogExecutionTime;
 import com.ecommerce.product.dto.PageResponse;
 import com.ecommerce.product.dto.ProductRequest;
 import com.ecommerce.product.dto.ProductResponse;
@@ -30,10 +31,12 @@ public class ProductController {
 
     @PostMapping
     public ResponseEntity<ProductResponse> createProduct(@Valid @RequestBody ProductRequest request) {
+        System.out.println("At contoller "+ request);
+        System.out.println("POST PRODUCT CONTROLLER HIT");
         return ResponseEntity.status(HttpStatus.CREATED).body(productService.createProduct(request));
 
     }
-
+    @LogExecutionTime (name = "Controller")
     @GetMapping
     public ResponseEntity<PageResponse<ProductResponse>> getAllProducts(@RequestParam(required = false) String search,
 
@@ -46,7 +49,7 @@ public class ProductController {
         @RequestParam(defaultValue = "id") String sortBy,
 
         @RequestParam(defaultValue = "asc") String direction) {
-
+ System.out.println("Testing is  there ");
     return ResponseEntity.ok(
             productService.getProducts(
                     search,
